@@ -2,6 +2,26 @@
 
 {% block content %}
     <h2>{% block title %} {{ post['title'] }} {% endblock %}</h2>
-    <span class="badge badge-primary">{{ post['created'] }}</span>
+    <span class="badge badge-primary">created {{ post['created'] }}</span>
+    <span class="badge badge-primary">updated {{ post['updated'] }}</span>
     <p>{{ post['content'] }}</p>
+    <hr>
+    <h3>Responses</h3>
+    <ul>
+        {% for response in responses %}
+            <li>
+                <span class="badge badge-secondary">Author {{ response['author'] }}</span>
+                <span class="badge badge-primary">created {{ response['created'] }}</span>
+                <p>{{ response['content_response'] }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <a href="{{ url_for('edit', id=post['id']) }}" class="btn btn-primary">Edit Post</a>
+    <form method="post" action="{{ url_for('delete', id=post['id']) }}" style="display: inline-block;">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+    <a href="{{ url_for('created', id=post['id']) }}" class="btn btn-primary">Create response</a>
+    <hr>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Back</a>
 {% endblock %}

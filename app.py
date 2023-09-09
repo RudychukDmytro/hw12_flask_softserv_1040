@@ -7,6 +7,7 @@ from flask import (Flask,
                    redirect,
                   )
 from werkzeug.exceptions import abort
+from datetime import datetime
 
 def get_db_connection():
     conn = sqlite3.connect("database.db")
@@ -22,6 +23,13 @@ def get_post(post_id):
         abort(404)
     return post
 
+def get_responses(post_id):
+    conn = get_db_connection()
+    responses = conn.execute("SELECT * FROM response WHERE post_id = ?", (post_id,)).fetchall()
+    conn.close()
+    return responses
+
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "key"
@@ -36,8 +44,9 @@ def index():
 
 @app.route("/<int:post_id>")
 def post(post_id):
+    responses = get_responses(post_id)
     post = get_post(post_id)
-    return render_template("post.html", post=post)
+    return render_template("post.html", post=post, responses=responses)
 
 
 @app.route('/create', methods=('GET', 'POST'))
@@ -65,14 +74,16 @@ def edit(id):
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
+        current_datetime = datetime.now()
+        updated = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
         if not title:
             flash('Title is required!')
         else:
             conn = get_db_connection()
-            conn.execute('UPDATE posts SET title = ?, content = ?'
+            conn.execute('UPDATE posts SET title = ?, content = ?, updated = ?'
                          ' WHERE id = ?',
-                         (title, content, id))
+                         (title, content, updated, id))
             conn.commit()
             conn.close()
             return redirect(url_for('index'))
@@ -89,6 +100,27 @@ def delete(id):
     conn.close()
     flash('"{}" was successfully deleted!'.format(post['title']))
     return redirect(url_for('index'))
+
+@app.route('/<int:id>/created', methods=('GET', 'POST'))
+def created(id):
+    post = get_post(id)
+    responses = get_responses(id)
+    if request.method == 'POST':
+        author = request.form['author']
+        content_response = request.form['content_response']
+        post_id = request.form['id']
+        if not author:
+            flash('Author is required!')
+        else:
+            conn = get_db_connection()
+            conn.execute('INSERT INTO response (author, content_response, post_id) VALUES (?, ?, ?)',
+                         (author, content_response, post_id))
+            conn.commit()
+            conn.close()
+            return redirect(url_for('index'))
+
+    return render_template('created_response.html', post=post, responses=responses)
+
 
 
 if __name__ == "__main__":
