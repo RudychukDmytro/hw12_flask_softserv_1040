@@ -50,4 +50,3 @@ We recommend using k3d for AsciiArtify's PoC. Below is a brief demonstration of 
   - kubectl get nodes -o wide
 
 Demo video: https://www.loom.com/share/4a3f4432bba24c8887afcf272b6e465a
-![Image](.data/demo.gif)
