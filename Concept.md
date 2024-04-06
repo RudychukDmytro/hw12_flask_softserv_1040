@@ -36,15 +36,15 @@ AsciiArtify plans to deploy their Kubernetes clusters locally for development an
 
 ## Demonstration
 We recommend using k3d for AsciiArtify's PoC. Below is a brief demonstration of deploying a "Hello World" application on Kubernetes using k3d:
-step 1
-- k3d cluster create my-cluster
-- kubectl cluster-info
-step 2
-- docker build -t my-flask-app .
-step 3
-- kubectl apply -f deployment.yaml
-- kubectl get deployments
-step 4
-- kubectl apply -f service.yaml
-- kubectl get services
-- kubectl get nodes -o wide
+- step 1
+  - k3d cluster create my-cluster
+  - kubectl cluster-info
+- step 2
+  - docker build -t my-flask-app .
+- step 3
+  - kubectl apply -f deployment.yaml
+  - kubectl get deployments
+- step 4
+  - kubectl apply -f service.yaml
+  - kubectl get services
+  - kubectl get nodes -o wide
