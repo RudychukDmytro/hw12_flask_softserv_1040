@@ -1,19 +1,32 @@
 import sqlite3
-from flask import (Flask,
-                   render_template,
-                   request,
-                   url_for,
-                   flash,
-                   redirect,
-                  )
-from werkzeug.exceptions import abort
 from datetime import datetime
+
+from flask import Flask, flash, redirect, render_template, request, url_for
+from werkzeug.exceptions import abort
+
 
 def get_db_connection():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
     return conn
-    
+
+connection = sqlite3.connect("database.db")
+
+with open("schema.sql") as f:
+    connection.executescript(f.read())
+
+    cur = connection.cursor()
+
+    cur.execute("INSERT INTO posts (title, content) VALUES (?, ?)",
+                        ("First Post", "Content for the first post")
+                        )
+
+    cur.execute("INSERT INTO posts (title, content) VALUES (?, ?)",
+                        ("Second Post", "Content for the second post")
+                        )
+
+    connection.commit()
+    connection.close()
 
 def get_post(post_id):
     conn = get_db_connection()
@@ -120,7 +133,6 @@ def created(id):
             return redirect(url_for('index'))
 
     return render_template('created_response.html', post=post, responses=responses)
-
 
 
 if __name__ == "__main__":
