@@ -48,7 +48,4 @@ We recommend using k3d for AsciiArtify's PoC. Below is a brief demonstration of 
   - kubectl apply -f service.yaml
   - kubectl get services
   - kubectl get nodes -o wide
-<video width="320" height="240" controls>
-  <source src="https://www.loom.com/share/4a3f4432bba24c8887afcf272b6e465a" type="video/mp4">
-  Ваш браузер не підтримує відео тег.
-</video>
+![Image](.data/demo.gif)
