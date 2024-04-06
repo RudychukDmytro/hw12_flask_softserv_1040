@@ -6,7 +6,7 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY . .
-
+COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /ets/ssl/certs/
 
 EXPOSE 8080
 
